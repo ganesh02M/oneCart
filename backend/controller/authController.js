@@ -51,7 +51,7 @@ export const login = async (req,res) => {
         res.cookie("token",token,{
         httpOnly:true,
         secure:false,
-        sameSite: "Strict",
+        sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
     return res.status(201).json(user)
@@ -75,34 +75,29 @@ try {
 }
 
 
-export const googleLogin = async (req,res) => {
+export const googleLogin = async (req, res) => {
     try {
-         console.log("BODY:", req.body);
-        let {name , email} = req.body;
-         let user = await User.findOne({email}) 
+        let {name, email} = req.body;
+        let user = await User.findOne({email})
         if(!user){
-          user = await User.create({
-            name,email,
-            password:"google-auth"
-        })
+            user = await User.create({
+                name, email,
+                password: "google-auth"
+            })
         }
-       
         let token = await genToken(user._id)
-        res.cookie("token",token,{
-        httpOnly:true,
-        secure:false,
-        sameSite: "Lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    })
-    return res.status(200).json(user)
-
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "Lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+        return res.status(200).json({user, token})
     } catch (error) {
-         console.log("ERROR:", error)
-    return res.status(500).json({message:`googleLogin error ${error}`})
+        console.log("ERROR:", error)
+        return res.status(500).json({message: `googleLogin error ${error}`})
     }
-    
 }
-
 
 export const adminLogin = async (req,res) => {
   try {
@@ -125,7 +120,7 @@ export const adminLogin = async (req,res) => {
       return res.status(400).json({message:"Not an admin"});
     }
 
-    let token = await genToken1(user._id);
+    let token = await genToken(user._id);
 
     res.cookie("token",token,{
       httpOnly:true,

@@ -12,6 +12,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../utils/Firebase';
 import { userDataContext } from '../context/UserContext';
 import Loading from '../component/Loading';
+import toast from 'react-hot-toast'
 
 function Login() {
     let [show,setShow] = useState(false)
@@ -42,22 +43,25 @@ function Login() {
         }
     }
      const googlelogin = async () => {
-            try {
-                const response = await signInWithPopup(auth , provider)
-                let user = response.user
-                let name = user.displayName;
-                let email = user.email
-    
-                const result = await axios.post(serverUrl + "/api/auth/googlelogin" ,{name , email} , {withCredentials:true})
-                console.log(result.data)
-                getCurrentUser()
-            navigate("/")
-    
-            } catch (error) {
-                console.log(error)
-            }
-            
-        }
+    try {
+        const response = await signInWithPopup(auth, provider)
+        let user = response.user
+        let name = user.displayName;
+        let email = user.email
+
+        const result = await axios.post(serverUrl + "/api/auth/googlelogin", 
+            {name, email}, 
+            {withCredentials: true}
+        )
+        // Token localStorage mein save karo
+        localStorage.setItem("token", result.data.token)
+        getCurrentUser()
+        navigate("/")
+    } catch (error) {
+        console.log(error)
+        toast.error("Google Login Failed")
+    }
+}
   return (
     <div className='w-[100vw] h-[100vh] bg-gradient-to-l from-[#141414] to-[#0c2025] text-[white] flex flex-col items-center justify-start'>
     <div className='w-[100%] h-[80px] flex items-center justify-start px-[30px] gap-[10px] cursor-pointer' onClick={()=>navigate("/")}>

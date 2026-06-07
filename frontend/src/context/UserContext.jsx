@@ -9,17 +9,18 @@ function UserContext({children}) {
 
 
    const getCurrentUser = async () => {
-        try {
-            let result = await axios.get(serverUrl + "/api/user/getcurrentuser",{withCredentials:true})
-
-            setUserData(result.data)
-            console.log(result.data)
-
-        } catch (error) {
-            setUserData(null)
-            console.log(error)
-        }
+    try {
+        const token = localStorage.getItem("token")
+        let result = await axios.get(serverUrl + "/api/user/getcurrentuser", {
+            withCredentials: true,
+            headers: token ? {Authorization: `Bearer ${token}`} : {}
+        })
+        setUserData(result.data)
+    } catch (error) {
+        setUserData(null)
+        console.log(error)
     }
+}
 
     useEffect(()=>{
      getCurrentUser()

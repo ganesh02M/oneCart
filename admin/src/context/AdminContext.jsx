@@ -21,7 +21,7 @@ function AdminContext({children}) {
     }
 
     useEffect(()=>{
-     getAdmin()
+     //getAdmin()
     },[])
 
 

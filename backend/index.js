@@ -1,6 +1,6 @@
-import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
+import express from 'express'
 import connectDb from './config/db.js'
 import cookieParser from 'cookie-parser'
 import cors from "cors"
@@ -16,7 +16,12 @@ let app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174","https://one-cart-ten.vercel.app","https://onecart-admin-beta.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://one-cart-ten.vercel.app",
+    "https://onecart-admin-beta.vercel.app"
+  ],
   credentials: true
 }))
 
